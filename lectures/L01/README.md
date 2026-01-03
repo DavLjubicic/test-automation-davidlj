@@ -16,6 +16,7 @@
 ### Förberedelser
 * Läs igenom projektbeskrivningen för kursen [här](../../project/README.md).
 * Läs igenom [följande dokument](./cpp/) för bakgrund gällande C++, klasser och interfaces.
+* Följ installations och användarinstruktionerna [här](../../README.md#installations--och-användarinstruktioner).
 
 ### Demonstration
 * En smart temperatursensor implementeras i helklass.
