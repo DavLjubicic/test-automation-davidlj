@@ -88,7 +88,8 @@ void invokeCallback(const uint8_t timerIndex) noexcept
 // -----------------------------------------------------------------------------
 Atmega328p::Atmega328p(const uint32_t timeout_ms, void (*callback)(), 
                        const bool startTimer) noexcept
-    : myHw{Hardware::reserve()}
+					   
+	: myHw{(0U < timeout_ms) ? Hardware::reserve() : nullptr}
 	, myMaxCount{maxCount(timeout_ms)}
 	, myEnabled{false}
 {
@@ -101,6 +102,7 @@ Atmega328p::Atmega328p(const uint32_t timeout_ms, void (*callback)(),
 // -----------------------------------------------------------------------------
 Atmega328p::~Atmega328p() noexcept 
 { 
+	if (!isInitialized()) { return; }
 	removeCallback();
 	myTimers[myHw->index] = nullptr;
 	Hardware::release(myHw); 

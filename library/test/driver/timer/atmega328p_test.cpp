@@ -11,9 +11,6 @@
 
 #ifdef TESTSUITE
 
-//! @todo Remove this #ifdef in lecture 4 to enable these tests.
-#ifdef LECTURE4
-
 //! @todo Implement tests according to project requirements.
 namespace driver
 {
@@ -57,16 +54,31 @@ TEST(Timer_Atmega328p, Initialization)
     //          hardware limitations.
     {
         //! @todo Test timer initialization:
-            // Create MaxTimerCount timers with different timeouts.
+            // Create three timers.
+            timer::Atmega328p timer0{100U};
+            timer::Atmega328p timer1{50U};
+            timer::Atmega328p timer2{25U};
+
             // Verify that each timer is initialized.
+            EXPECT_TRUE(timer0.isInitialized());
+            EXPECT_TRUE(timer1.isInitialized());
+            EXPECT_TRUE(timer2.isInitialized());
+
             // Create one additional timer.
             // Verify that the additional timer isn't initialized, since no circuits are available.
+            timer::Atmega328p timer3{10};
+            EXPECT_FALSE(timer3.isInitialized());
     }
 
     // Case 2 - Verify that a timer cannot have a 0 ms timeout.
     {
         // Create a timer with a 100 ms timeout.
+        timer::Atmega328p timer0{100U};
+        EXPECT_TRUE(timer0.isInitialized());
+
         // Verify that the timer is initialized.
+        timer::Atmega328p timer1{0U};
+        EXPECT_FALSE(timer1.isInitialized());
 
         //  Create a timer with a 0 ms timeout.
         // Verify that the timer isn't initialized (0 ms is an invalid timeout).
@@ -158,8 +170,5 @@ TEST(Timer_Atmega328p, Restart)
 
 } // namespace
 } // namespace driver
-
-//! @todo Remove this #endif in lecture 4 to enable these tests.
-#endif /** LECTURE4 */
 
 #endif /** TESTSUITE */
