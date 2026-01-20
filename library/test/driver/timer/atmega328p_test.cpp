@@ -19,8 +19,7 @@ namespace
 /** Maximum number of timer circuits available on ATmega328P. */
 constexpr std::uint8_t MaxTimerCount{3U};
 
-//! @todo Remove this #ifdef when starting to work on the callback test.
-#ifdef CALLBACK
+
 
 /** Flag to track if callback was invoked. */
 bool callbackInvoked{false};
@@ -37,10 +36,8 @@ constexpr std::uint32_t getMaxCount(const std::uint32_t timeout_ms) noexcept
     constexpr double interruptIntervalMs{0.128};
 	return 0U < timeout_ms ? 
         utils::round<std::uint32_t>(timeout_ms / interruptIntervalMs) : 0U;
-}
+}   
 
-//! @todo Remove this #endif when starting to work on the callback test.
-#endif /** CALLBACK */
 
 /**
  * @brief Timer initialization test.
