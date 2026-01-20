@@ -104,11 +104,22 @@ TEST(Timer_Atmega328p, EnableDisable)
     EXPECT_TRUE(timer.isEnabled());
 
     // Stop the timer.
+    timer.stop();
+
     // Verify that the timer is disabled.
+    EXPECT_FALSE(timer.isEnabled());
+
     // Toggle the timer.
+    timer.toggle();
+
     // Verify that the timer is enabled.
+    EXPECT_TRUE(timer.isEnabled());
+
     // Toggle the timer once again.
+    timer.toggle();
+
     // Verify that the timer is disabled.
+    EXPECT_FALSE(timer.isEnabled());
 
 //! @note Once the above is working:
 //!       Feel free to try all three timers. When enabling/disabling, feel free to check both
@@ -123,16 +134,28 @@ TEST(Timer_Atmega328p, EnableDisable)
  * @brief Timer timeout test.
  * 
  *        Verify that timeout values can be set and read correctly.
+ *
  */
+
 TEST(Timer_Atmega328p, Timeout)
 {
     //! @todo Test timer timeout:
         // Create a timer with an initial timeout of 100 ms.
+        timer::Atmega328p timer{100U};
         // Verify timeout_ms() returns the correct value.
+        EXPECT_EQ(timer.timeout_ms(), 100U);
+
         // Change the timeout to 200 ms using setTimeout_ms().
+        timer.setTimeout_ms(200U);
+
         // Verify the new timeout is returned by timeout_ms().
+        EXPECT_EQ(timer.timeout_ms(), 200U);
+
         // Change the timeout to 0 ms using setTimeout_ms().
+        timer.setTimeout_ms(0U);
+
         // Verify that the timeout is unchanged (0 ms is an invalid timeout).
+        EXPECT_EQ(timer.timeout_ms(), 200U);
 }
 
 /**
@@ -144,11 +167,20 @@ TEST(Timer_Atmega328p, Callback)
 {
     //! @todo Test timer callback:
         // Reset the callback flag (callbackInvoked) using resetCallbackFlag().
+        resetCallbackFlag();
         // Create a timer with a short timeout, such as 10 ms, and testCallback() as callback.
+        constexpr std::uint32_t timeoutMs{10U};
         // Start the timer.
+        timer::Atmega328p timer{timeoutMs, testCallback, true};
         // Simulate timer interrupts by repeatedly calling handleCallback() on the timer.
+        const std::uint32_t maxCount{getMaxCount(timeoutMs)};
         // Call handleCallback() enough times to reach the timeout (getMaxCount()).
+        for (std::uint32_t count{}; count < maxCount; ++count)
+        {
+            timer.handleCallback();
+        }
         // Verify that callbackInvoked is true after timeout.
+        EXPECT_TRUE(callbackInvoked);
         // Note: handleCallback() increments the timer and invokes the callback when timeout is reached.
     
     
@@ -163,15 +195,32 @@ TEST(Timer_Atmega328p, Restart)
 {
     //! @todo Test timer restart:
         // Reset the callback flag (callbackInvoked) using resetCallbackFlag().
+        resetCallbackFlag();
         // Create and start a timer with testCallback() as callback.
+        constexpr std::uint32_t timeoutMs{10U};
         // Call handleCallback() enough times to almost reach the timeout (getMaxCount() - 1).
+        timer::Atmega328p timer{timeoutMs, testCallback, true};
         // Verify that the callback flag (callbackInvoked) is still false.
+        const std::uint32_t maxCount{getMaxCount(timeoutMs)};
         // Restart the timer.
+        for (std::uint32_t count{}; count < maxCount - 1; ++count)
+        {
+            timer.handleCallback();
+        }
         // Verify that the timer is still enabled after restart.
+        EXPECT_FALSE(callbackInvoked);
         // Call handleCallback() enough times to almost reach the timeout (getMaxCount() - 1).
+        timer.restart();
         // Verify that the callback flag (callbackInvoked) is still false, since the timer was restarted.
+        for (std::uint32_t count{}; count < maxCount - 1; ++count)
+        {
+            timer.handleCallback();
+        }
+        EXPECT_FALSE(callbackInvoked);
         // Call handleCallback() again to reach timeout.
+        timer.handleCallback();
         // Verify that the callback flag (callbackInvoked) is true due to timeout.
+        EXPECT_TRUE(callbackInvoked);
 }
 
 //! @todo Add more tests here (e.g., register verification, multiple timers running simultaneously).
