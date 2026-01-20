@@ -89,25 +89,33 @@ TEST(Timer_Atmega328p, Initialization)
  */
 TEST(Timer_Atmega328p, EnableDisable)
 {
-    //! @todo Test timer enablement.
-        // Create a timer with a timeout.
-        // Verify timer is not enabled initially (unless auto-started via the constructor).
-        // Start the timer.
-        // Verify that the timer is enabled.
-        // Stop the timer.
-        // Verify that the timer is disabled.
-        // Toggle the timer.
-        // Verify that the timer is enabled.
-        // Toggle the timer once again.
-        // Verify that the timer is disabled.
+    // Create a timer with a timeout.
+    constexpr std::uint16_t timeoutMs{100U};
+    timer::Atmega328p timer{timeoutMs};
 
-    //! @note Once the above is working:
-    //!       Feel free to try all three timers. When enabling/disabling, feel free to check both
-    //!       that the isEnabled() methods returns the right value and that the associated bit
-    //!       in the timer mask register is set (see the source code).
-    //!       Feel free to add a function and pass the timer, the mask register and the mask bit
-    //!       to avoid writing the same code three times (or use a struct as was the case for
-    //!       the registers in the GPIO unit tests).
+    // Verify timer is not enabled initially (unless auto-started via the constructor).
+    EXPECT_FALSE(timer.isEnabled());
+
+    // Start the timer.
+    timer.start();
+
+    // Verify that the timer is enabled.
+    EXPECT_TRUE(timer.isEnabled());
+
+    // Stop the timer.
+    // Verify that the timer is disabled.
+    // Toggle the timer.
+    // Verify that the timer is enabled.
+    // Toggle the timer once again.
+    // Verify that the timer is disabled.
+
+//! @note Once the above is working:
+//!       Feel free to try all three timers. When enabling/disabling, feel free to check both
+//!       that the isEnabled() methods returns the right value and that the associated bit
+//!       in the timer mask register is set (see the source code).
+//!       Feel free to add a function and pass the timer, the mask register and the mask bit
+//!       to avoid writing the same code three times (or use a struct as was the case for
+//!       the registers in the GPIO unit tests).
 }
 
 /**
@@ -141,6 +149,8 @@ TEST(Timer_Atmega328p, Callback)
         // Call handleCallback() enough times to reach the timeout (getMaxCount()).
         // Verify that callbackInvoked is true after timeout.
         // Note: handleCallback() increments the timer and invokes the callback when timeout is reached.
+    
+    
 }
 
 /**
