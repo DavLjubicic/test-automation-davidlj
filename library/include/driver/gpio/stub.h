@@ -91,6 +91,16 @@ public:
         if (myInitialized) { myInterruptEnabled = enable; } 
     }
 
+    /**
+     * @brief Enable pin change interrupt for I/O port associated with the GPIO.
+     * 
+     * @param[in] enable True to enable pin change interrupt for the I/O port, false otherwise.
+     */
+    void enableInterruptOnPort(bool enable) noexcept override
+    {
+        // Only update the GPIO interrupt enablement state if the device is initialized.
+        if (myInitialized) { myInterruptEnabled = enable; } 
+    }
 
     /**
      * @brief Enable GPIO initialization state.
