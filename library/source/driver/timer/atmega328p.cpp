@@ -129,7 +129,8 @@ uint32_t Atmega328p::timeout_ms() const noexcept
 // -----------------------------------------------------------------------------
 void Atmega328p::setTimeout_ms(const uint32_t timeout_ms) noexcept
 {
-    if (0U == timeout_ms) { stop(); }
+	// Ignore the user if he/she is stupid enough to send a timeout of 0 ms.
+    if (0U == timeout_ms) { return; }
     myMaxCount = maxCount(timeout_ms);
 }
 
