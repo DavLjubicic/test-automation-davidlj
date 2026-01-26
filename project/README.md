@@ -239,7 +239,7 @@ För att underlätta testning av seriell kommunikation och programflöde på ver
 
 **Testfall att implementera** (se L09 för detaljer):
 * Toggle-funktionalitet via kommandot `t`.
-* Status-avläsning via kommandot `s`.
+* Status-avläsning via kommandot `s` (kan/bör göras tillsammans med test av toggle-funktionaliteten).
 * Temperaturavläsning via kommandot `r`.
 * Felhantering vid ogiltiga kommandon.
 
@@ -321,7 +321,7 @@ library/test/
 │   └── lin_reg/
 │       └── fixed_test.cpp            # Regressions-tester, ska implementeras i helklass.
 └── scripts/
-    └── serial_test.py                # Python-skript för seriell kommunikation, ska implementeras.
+    └── serial_test.py                # Python-skript för seriell kommunikation, ska implementeras för VG.
 ```
 
 ## Git och versionshantering
