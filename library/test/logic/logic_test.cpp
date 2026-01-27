@@ -371,6 +371,9 @@ TEST(Logic, TempHandling)
     // Case 1 - Press the toggle button, simulate button event.
     // Expect the temperature to not be printed, since the wrong button was pressed.
     {
+        // Get the number of temperature printouts before pressdown.
+        const uint16_t tempPrintouts1{mock.logicImpl->tempPrintoutCount()};
+
         // Press the toggle button.
         mock.toggleButton.write(true);
 
@@ -379,11 +382,26 @@ TEST(Logic, TempHandling)
 
         // Release the toggle button.
         mock.toggleButton.write(false);
+
+        // Get the number of temperature printouts after pressdown.
+        const uint16_t tempPrintouts2{mock.logicImpl->tempPrintoutCount()};
+
+        // Expect no temperature printout.
+        EXPECT_EQ(tempPrintouts1, tempPrintouts2);
+
+        // Simulate debounce timer timeout.
+        mock.debounceTimer.setTimedOut(true);
+
+        // Simulate debounce timer interrupt.
+        logic.handleDebounceTimerTimeout();
     }
 
     // Case 2 - Press the temperature button, simulate button event.
     // Expect the temperature to be printed once.
     {
+        // Get the number of temperature printouts before pressdown.
+        const uint16_t tempPrintouts1{mock.logicImpl->tempPrintoutCount()};
+
         // Press the temperature button.
         mock.tempButton.write(true);
 
@@ -392,16 +410,43 @@ TEST(Logic, TempHandling)
 
         // Release the temperature button.
         mock.tempButton.write(false);
+
+        // Get the number of temperature printouts after pressdown.
+        const uint16_t tempPrintouts2{mock.logicImpl->tempPrintoutCount()};
+
+        // Expect one temperature printout.
+        EXPECT_EQ(tempPrintouts1 + 1U, tempPrintouts2);
+
+        // Simulate debounce timer timeout.
+        mock.debounceTimer.setTimedOut(true);
+
+        // Simulate debounce timer interrupt.
+        logic.handleDebounceTimerTimeout();
     }
 
     // Case 3 - Simulate temperature timer timeout.
     // Expect the temperature to be printed once more.
     {
+        // Get the number of temperature printouts before pressdown.
+        const uint16_t tempPrintouts1{mock.logicImpl->tempPrintoutCount()};
+
         // Simulate temperature timer timeout.
         mock.tempTimer.setTimedOut(true);
 
         // Simulate temperature timer interrupt.
         logic.handleTempTimerTimeout();
+
+        // Get the number of temperature printouts after pressdown.
+        const uint16_t tempPrintouts2{mock.logicImpl->tempPrintoutCount()};
+
+        // Expect one temperature printout.
+        EXPECT_EQ(tempPrintouts1 + 1U, tempPrintouts2);
+
+        // Simulate debounce timer timeout.
+        mock.debounceTimer.setTimedOut(true);
+
+        // Simulate debounce timer interrupt.
+        logic.handleDebounceTimerTimeout();
     }
 }
 
