@@ -90,9 +90,6 @@ void runOutputTest(const std::uint8_t id, GpioRegs& regs) noexcept
         // Create a new GPIO output.
         gpio::Atmega328p gpio{id, gpio::Direction::Output};
 
-        // Vi kollar pin-numret, ser vi något som är konstigt/suspekt?
-        std::printf("Pin number: %u, ATmega number: %u\n", pin, id);
-
         // Expect the instance to be initialized correctly if the pin is valid.
         const bool pinValid{isPinValid(id)};
         EXPECT_EQ(gpio.isInitialized(), pinValid);
@@ -179,15 +176,16 @@ TEST(Gpio_Atmega328p, Initialization)
     for (std::uint8_t pin{}; pin < pinMax; ++pin)
     {
         // Create a new GPIO instance with the current pin number.
-        // Example: gpio::Atmega328p gpio{pin, gpio::Direction::Output};
+        gpio::Atmega328p gpio{pin, gpio::Direction::Output};
 
         // Expect the instance to be initialized correctly if the pin is valid.
-        // Tips: Check if the instance is initialized by invoking gpio.isInitialized().
-        //       Check if the pin is valid by invoking isPinValid(pin).
-        //       Use EXPECT_TRUE(), EXPECT_FALSE, and/or EXPECT_EQ to validate the functionality.
+        const bool pinValid{isPinValid(pin)};
+        EXPECT_EQ(gpio.isInitialized(), pinValid);
 
         // Create another GPIO instance on the same pin.
         // Expect the instance to not be initialized, since the pin is already reserved.
+        gpio::Atmega328p otherOnSamePin{pin, gpio::Direction::Output};
+        EXPECT_FALSE(otherOnSamePin.isInitialized());
     }
 }
 
